@@ -53,15 +53,15 @@ var requestHandler = function (request, response) {
   // headers['Content-Type'] = 'text/plain';
   if (request.method === 'GET') {
     var statusCode = 200;
-    // if (request.url === '/classes/messages') {
-    headers['Content-Type'] = 'application/json';
-    response.writeHead(200, headers);
-    response.end(JSON.stringify(messages));
-    // }
-    // else if (request.url === '/arglebargle') {
-    //     headers['Content-Type'] = 'text/plain';
-    //     response.writeHead(404, headers);
-    //     response.end('404 page not found');
+    if (request.url === '/classes/messages') {
+      headers['Content-Type'] = 'application/json';
+      response.writeHead(200, headers);
+      response.end(JSON.stringify(messages));
+    } else if (request.url === '/arglebargle') {
+      headers['Content-Type'] = 'text/plain';
+      response.writeHead(404, headers);
+      response.end('404 page not found');
+    }
   } else if (request.method === 'POST') {
     headers['Content-Type'] = 'application/json';
     response.writeHead(201, headers);

@@ -3,7 +3,6 @@
 // and begin making requests to the Parse API for data.
 
 var App = {
-
   $spinner: $('.spinner img'),
 
   username: 'anonymous',
@@ -19,14 +18,12 @@ var App = {
     App.startSpinner();
     App.fetch(App.stopSpinner);
 
-
     // Poll for new messages every 3 sec
     setInterval(App.fetch, 3000);
   },
 
-  fetch: function (callback = () => { }) {
+  fetch: function (callback = () => {}) {
     Parse.readAll((data) => {
-
       // Only update if we have messages.
       if (data && data.length) {
         Rooms.update(data, RoomsView.render);
@@ -35,7 +32,6 @@ var App = {
         callback();
       }
       return;
-
     });
   },
 
@@ -47,5 +43,5 @@ var App = {
   stopSpinner: function () {
     App.$spinner.fadeOut('fast');
     FormView.setStatus(false);
-  }
+  },
 };
