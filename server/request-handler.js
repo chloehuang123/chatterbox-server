@@ -51,18 +51,28 @@ var requestHandler = function (request, response) {
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
   // headers['Content-Type'] = 'text/plain';
-  if (request.method === 'GET') {
-    var statusCode = 200;
+
+  if (request.method === 'OPTIONS') {
+    console.log('options');
+    headers['Content-Type'] = 'text/plain';
+    response.writeHead(200, headers);
+    response.end('Allow: GET, POST, PUT, DELETE, OPTIONS');
+  } else if (request.method === 'GET') {
     if (request.url === '/classes/messages') {
+      console.log('get');
       headers['Content-Type'] = 'application/json';
       response.writeHead(200, headers);
       response.end(JSON.stringify(messages));
     } else if (request.url === '/arglebargle') {
+      console.log('404');
       headers['Content-Type'] = 'text/plain';
       response.writeHead(404, headers);
       response.end('404 page not found');
     }
   } else if (request.method === 'POST') {
+    console.log('post');
+    console.log(request);
+
     headers['Content-Type'] = 'application/json';
     response.writeHead(201, headers);
     response.end(JSON.stringify(messages.results));
