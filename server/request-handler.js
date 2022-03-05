@@ -46,10 +46,6 @@ var requestHandler = function (request, response) {
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
 
-  //var messages = {};
-
-  //messages.results = [];
-
   // Tell the client we are sending them plain text.
   //
   // You will need to change this if you are sending something
