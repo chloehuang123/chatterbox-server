@@ -20,6 +20,7 @@ var defaultCorsHeaders = {
 
 var messages = {};
 messages.results = [];
+var messageId = 0;
 
 var requestHandler = function (request, response) {
   // Request and Response come from node's http module.
@@ -56,37 +57,30 @@ var requestHandler = function (request, response) {
   // headers['Content-Type'] = 'text/plain';
 
   if (request.method === 'OPTIONS') {
-    console.log('options');
     headers['Content-Type'] = 'text/plain';
     response.writeHead(200, headers);
     response.end('Allow: GET, POST, PUT, DELETE, OPTIONS');
   } else if (request.method === 'GET') {
     if (request.url === '/classes/messages') {
-      console.log('get');
       headers['Content-Type'] = 'application/json';
       response.writeHead(200, headers);
       response.end(JSON.stringify(messages));
     } else if (request.url === '/arglebargle') {
-      console.log('404');
       headers['Content-Type'] = 'text/plain';
       response.writeHead(404, headers);
       response.end('404 page not found');
     }
   } else if (request.method === 'POST') {
-    console.log('post');
-
-    console.log('length before = ', messages.results.length);
-
     var data = '';
     request.on('data', chunk => {
       data += chunk;
-      console.log(JSON.parse(data));
     });
 
     request.on('end', () => {
-      messages.results.push(JSON.parse(data));
-      console.log('length after = ', messages.results.length);
-      console.log(messages.results);
+      var originalData = JSON.parse(data);
+      originalData['messageId'] = messageId;
+      messageId++;
+      messages.results.unshift(originalData);
       headers['Content-Type'] = 'application/json';
       response.writeHead(201, headers);
       response.end(JSON.stringify(messages));
