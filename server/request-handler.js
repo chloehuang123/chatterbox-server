@@ -18,6 +18,9 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+var messages = {};
+messages.results = [];
+
 var requestHandler = function (request, response) {
   // Request and Response come from node's http module.
   //
@@ -42,9 +45,9 @@ var requestHandler = function (request, response) {
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
 
-  var messages = {};
+  //var messages = {};
 
-  messages.results = [];
+  //messages.results = [];
 
   // Tell the client we are sending them plain text.
   //
@@ -71,11 +74,23 @@ var requestHandler = function (request, response) {
     }
   } else if (request.method === 'POST') {
     console.log('post');
-    console.log(request);
 
-    headers['Content-Type'] = 'application/json';
-    response.writeHead(201, headers);
-    response.end(JSON.stringify(messages.results));
+    console.log('length before = ', messages.results.length);
+
+    var data = '';
+    request.on('data', chunk => {
+      data += chunk;
+      console.log(JSON.parse(data));
+    });
+
+    request.on('end', () => {
+      messages.results.push(JSON.parse(data));
+      console.log('length after = ', messages.results.length);
+      console.log(messages.results);
+      headers['Content-Type'] = 'application/json';
+      response.writeHead(201, headers);
+      response.end(JSON.stringify(messages));
+    });
   }
 
   // .writeHead() writes to the request line and headers of the response,
